@@ -1,13 +1,11 @@
-load('new_data_format_2_2.mat')
-
-
-n_sensitivities = length(simdata);
+load('asymptotic_data.mat')
 
 best_mle_error = zeros(n_sensitivities, mc_iterations);
 worst_mle_error = zeros(n_sensitivities, mc_iterations);
 best_em_error = zeros(n_sensitivities, mc_iterations);
 worst_em_error = zeros(n_sensitivities, mc_iterations);
 
+n_sensitivities = length(simdata);
 % each sensitivity cell contain 
 % 2 matrices n_guesses x 1 x n_iter
 % 2 matrices n_guesses x nparams x n_iter

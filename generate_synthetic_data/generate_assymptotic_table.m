@@ -30,11 +30,11 @@ parfor horizon=1:length(T)
     fval_mle = zeros(n_guesses, 1 , mc_iterations);
     fval_em = zeros(n_guesses, 1, mc_iterations);
 
-    [accounts, actions_field] = generate_portfolio(n_acc,horizon,par,r,action_seq);
+    [accounts, actions_field] = generate_portfolio(n_acc,T(horizon),par,r,action_seq);
     ai = 3/4;
     bi=  5/4;
     for it=1:mc_iterations
-        [accounts, actions_field] = generate_portfolio(n_acc,horizon,par,r,action_seq);
+        [accounts, actions_field] = generate_portfolio(n_acc,T(horizon),par,r,action_seq);
         randguess = (ai + (bi-ai)*rand(n_guesses,length(params))) .* params;
         for guess=1:n_guesses
             x0 = randguess(guess,:);
@@ -45,9 +45,9 @@ parfor horizon=1:length(T)
             lb =zeros(size(x0));
             ub = [];
             nonlcon = [];
-            objfun = @(par) -loglike_portfolio(accounts,horizon,actions_field,par,0);
+            objfun = @(par) -loglike_portfolio(accounts,T(horizon),actions_field,par,0);
             [x,fval,exitflag,output] = fmincon(objfun, x0, A,b,Aeq,beq,lb,ub,nonlcon);
-            [lls,thetas,timings] = EM(x0,accounts,actions_field,horizon);
+            [lls,thetas,timings] = EM(x0,accounts,actions_field,T(horizon));
             fval_mle(guess, 1, it)  = fval;
             fval_em(guess, 1, it) = lls(end);
             result_mle(guess, :, it) = x;
@@ -58,4 +58,5 @@ parfor horizon=1:length(T)
     simdata{horizon} = {fval_mle, fval_em, result_mle, result_em};
 
 end
+save('asymptotic_data.mat')
 
