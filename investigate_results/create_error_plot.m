@@ -46,8 +46,8 @@ pfresults = [];
 
 
 for pf = 1:size(simdata1,1)%
-    relmle = reler(simdata1{pf}{5});
-    relem = reler(simdata1{pf}{6});
+    relmle = reler(simdata1{pf}{4});
+    relem = reler(get_converged_theta(simdata1{pf}{7}));
     
     relmlemean = mean(relmle,1);
     relemmean = mean(relem,1);
@@ -65,4 +65,9 @@ continueto = startfrom + 3;
 res = pfresults(startfrom:continueto,:);
 end
 
-
+function convergedtheta = get_converged_theta(thetas)
+    convergedtheta = zeros(size(thetas,1),size(thetas{1},2));
+    for row=1:size(thetas,1)
+        convergedtheta(row,:) = thetas{row}(end,:);
+    end
+end

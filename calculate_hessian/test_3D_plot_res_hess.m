@@ -15,7 +15,7 @@ res = res(cartProd(:,p3)==closest);
 cond_mle = cond_mle(cartProd(:,p3)==closest);
 cond_em = cond_em(cartProd(:,p3)==closest);
 
-surf(reshape(res,30,30))
+surf(reshape(res,50,50))
 
 %log_mle = reshape(log(cond_mle),30,30)
 %log_em = reshape(log(cond_em),30,30)

@@ -21,7 +21,8 @@ cond_em = (cond_em(cartProd(:,p3)==closest));
 x=plotsl(:,p1);
 y=plotsl(:,p2);
 figure;
-scatter(x,y,100,(cond_mle-cond_em),'filled');
+res = cond_mle-cond_em
+scatter(x,y,100,res>0,'filled');
 colormap(jet);
 colorbar;
 
@@ -30,7 +31,7 @@ x = unique(cartProd(:,p1));
 y = unique(cartProd(:,p2));
 
 [x,y] = meshgrid(x,y);
-cond_mle = reshape(cond_mle,30,30);
-cond_em = reshape(cond_em,30,30);
+cond_mle = reshape(cond_mle,50,50);
+cond_em = reshape(cond_em,50,50);
 [minValue,closestIndex] = min(abs(x(p1,:) - params(p3)));
 surf(x,y,cond_mle)

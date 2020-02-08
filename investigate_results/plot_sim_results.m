@@ -6,7 +6,7 @@
 [inpar,params] = setpar();
 T = 100;
 
-pf = 22;
+pf = 5;
 % contour plot parameters
 p1 = 3;
 p2 = 5;
@@ -23,7 +23,7 @@ pfolio = simdata{pf}{1};
 actions = simdata{pf}{2};
 x0 = simdata{pf}{3};
 x1 = simdata{pf}{4};
-thetas = get_converged_theta(simdata{pf}{9});
+thetas = get_converged_theta(simdata{pf}{7});
 
 objfun = @(par) - loglike_portfolio(pfolio,T,actions,par,0);
 objfunem = @(par) - Q(par,thetas(end,:),pfolio,actions,T);
@@ -34,15 +34,15 @@ labelmle = strcat(label," MLE ");
 labelem = strcat(label," EM ");
 range = [20*params(p1),20*params(p2)];
 
-globalrange = [20,20];
+globalrange = [10,10];
 
 
 [x,y,mles,ems] = setup_grid(p1,p2,globalrange,objfun,objfunem);
 
-plot_loglike_3D(p1,p2,x,y,mles,objfun,x0,x1,0,labelmle)
+plot_loglike_3D(p1,p2,x,y,mles,objfun,[],[],0,labelmle)
 
 plot2Dslice(p1,p2,x,y,mles,ems)
-plot_loglike_3D(p1,p2,x,y,ems,objfunem,x0,thetas,0,labelem)
+plot_loglike_3D(p1,p2,x,y,ems,objfunem,[],[],0,labelem)
 
 
 function convergedtheta = get_converged_theta(thetas)

@@ -3,22 +3,20 @@ T = 100;
 pf=5;
 h = 10e-4;
 %Plot from sim results
-ps = [2 3];
+ps = [3 ,5];
 %retreive data from pf
-pfolio = simdata1{pf}{1};
-covariates = simdata1{pf}{2};
-actions = simdata1{pf}{3};
-x0 = simdata1{pf}{4};
-x1 = simdata1{pf}{5};
-thetas = simdata1{pf}{6};
-lls = simdata1{pf};
+pfolio = simdata{pf}{1};
+actions = simdata{pf}{2};
+x0 = simdata{pf}{3};
+x1 = simdata{pf}{4};
+thetas = get_converged_theta(simdata{pf}{7});
 
 sets = cell(1,length(params));
 parfor ip=1:length(params) 
     if any(ps == ip)
         lb = params(ip)/10;
         ub = params(ip)*10;
-        sets{1,ip} = linspace(lb,ub,50);
+        sets{1,ip} = linspace(lb,ub,10);
     else
         sets{1,ip} = params(ip);
     end
@@ -26,8 +24,8 @@ end
 cartProd = allcomb(sets{:});
 
 % Obj Fun definition consistent with Hessian def
-objfun = @(par,N) [- loglike_portfolio(pfolio,covariates,T,actions,par,0),N+1];
-objfunem = @(par,N) [- Q(par,thetas(1,:),pfolio,actions,T),N+1];
+objfun = @(par,N) [- loglike_portfolio(pfolio,T,actions,par,0),N+1];
+objfunem = @(par,N) [- Q(par,thetas(end,:),pfolio,actions,T),N+1];
 
 %k = randperm(1000);
 %k=randi([1 size(cartProd,1)],1,5000);
@@ -36,8 +34,8 @@ mnew = cartProd;
 
 parfor row=1:size(mnew,1)
     p = mnew(row,:);
-    [H_mle, NFV] = num_hess(objfun, p, 0, h)
-    [H_em, NFV] = num_hess(objfunem, p, 0, h)
+    [H_mle, NFV] = num_hess(objfun, p, 0, h);
+    [H_em, NFV] = num_hess(objfunem, p, 0, h);
     cond_mle(row) = cond(H_mle);
     cond_em(row) = cond(H_em);
 end

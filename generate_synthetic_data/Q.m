@@ -74,6 +74,8 @@ for account=1:n_acc
 %             Expectation
             P_uij = g ./ norm;
             uijpart2 = (-par.kappa*(dt) + log((par.delta10 + par.delta11*repaymentshappened)./P_uij)) * P_uij';
+            % Prevent the division by zero in log
+            uijpart2(uijpart2==Inf) = 0;
             if ~(abs(P_uii+sum(P_uij)-1) < eps*100)
                 error('Probs dont sum to one');
             end

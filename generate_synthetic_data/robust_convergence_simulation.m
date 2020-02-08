@@ -26,7 +26,7 @@ function simdata = run_robust(T,n_acc,n_portfolio,action_seq,n_guess)
 np = length(params);
 r0 = 0;
 simdata = cell(n_portfolio,1);
-parfor pf = 1:n_portfolio
+for pf = 1:n_portfolio
     [pfolio,actions] = generate_portfolio(n_acc,T,inpar,r0,action_seq);
     %optimizer setting
     A = [];

@@ -1,3 +1,4 @@
+
 function [tau,repayments] = generate_account_history(T,par,repayment_dist, actions)
 %=======================================================================
 %Author: Michael Mark

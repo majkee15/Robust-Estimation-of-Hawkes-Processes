@@ -1,6 +1,7 @@
 %produce DJ Weber Plot
 npf = size(simdata1,1);
 T= 100;
+[inpar,params] = setpar();
 hisdataMLE = zeros(npf,2);
 hisdataEM = zeros(npf,2);
 
@@ -35,9 +36,14 @@ for pf = 1 :npf
     wparMLE = reler(x(iwMLE,:))*100;
     bparEM = reler(theta(ibEM,:))*100;
     wparEM = reler(theta(iwEM,:))*100;
-    
-    
-    
+
+%     bparMLE = norm(x(ibMLE,:),normtype)/norm(params,normtype)*100;
+%     wparMLE = norm(x(iwMLE,:),normtype)/norm(params,normtype)*100;
+%     bparEM = norm(theta(ibEM,:),normtype)/norm(params,normtype)*100;
+%     wparEM = norm(theta(iwEM,:),normtype)/norm(params,normtype)*100;    
+%     
+%     histdataMLE(pf,:) = [bparMLE,wparMLE];
+%     histdataEM(pf,:) = [bparEM, wparEM];
     hisdataMLE(pf,:) = [norm(bparMLE,normtype),norm(wparMLE,normtype)];
     hisdataEM(pf,:) = [norm(bparEM,normtype),norm(wparEM,normtype)];
 end
