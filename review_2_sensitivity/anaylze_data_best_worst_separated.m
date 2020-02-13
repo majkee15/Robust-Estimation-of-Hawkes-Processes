@@ -1,5 +1,5 @@
-load('new_data_format_2_2.mat')
-
+load('10it_10_guesses.mat')
+%load('new_data_format_2_2.mat')
 
 n_sensitivities = length(simdata);
 
@@ -36,20 +36,37 @@ for sensitivity=1:n_sensitivities
 end
 
 %here it should be mean
-best_mle_error = min(best_mle_error,[],2);
-worst_mle_error = min(worst_mle_error,[],2);
-best_em_error = min(best_em_error,[],2);
-worst_em_error = min(worst_em_error,[],2);
+% best_mle_error = min(best_mle_error,[],2);
+% worst_mle_error = min(worst_mle_error,[],2);
+% best_em_error = min(best_em_error,[],2);
+% worst_em_error = min(worst_em_error,[],2);
+
+best_mle_error_mean = mean(best_mle_error,2);
+worst_mle_error_mean = mean(worst_mle_error,2);
+best_em_error_mean = mean(best_em_error,2);
+worst_em_error_mean = mean(worst_em_error,2);
+
+best_mle_error_std = std(best_mle_error,[],2)./best_mle_error_mean;
+worst_mle_error_std = std(worst_mle_error,[],2)./worst_mle_error_mean;
+best_em_error_std = std(best_em_error,[],2)./best_em_error_mean;
+worst_em_error_std = std(worst_em_error,[],2)./worst_em_error_mean;
+
+% figure;
+% %errorbar(sensitivity_sequence, worst_mle_error_mean, worst_mle_error_std)
+% plot(sensitivity_sequence, worst_mle_error_mean);
 
 figure;
 hold on;
-plot(sensitivity_sequence,best_mle_error)
-plot(sensitivity_sequence, best_em_error)
-plot(sensitivity_sequence, worst_em_error)
+%yyaxis left;
+errorbar(sensitivity_sequence-0.01, best_mle_error_mean, best_mle_error_std, 'or')
+errorbar(sensitivity_sequence, best_em_error_mean, best_em_error_std, 'bs')
+errorbar(sensitivity_sequence+0.01, worst_em_error_mean, worst_em_error_std,'gd')
+% yyaxis right;
+% plot(sensitivity_sequence, worst_mle_error_mean);
 hold off;
+box on;
+xlim([-0.02,0.32])
 legend('Best MLE', 'Best EM', 'Worst EM');
-figure;
-plot(sensitivity_sequence, worst_mle_error)
 
 function err = calc_error(estimate, true)
     err = norm(estimate-true, 2) / norm(true);

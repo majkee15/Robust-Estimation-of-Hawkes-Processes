@@ -1,10 +1,10 @@
 %Impact of number of actions on accuracy - Reviewer 1 remark
 clc, clear;
 
-mc_iterations = 2;
+mc_iterations = 5;
 n_guesses = 2;
 [par,params] = setpar();
-T = [100, 150];
+T = [500, 1000, 2000];
 n_acc = 200;
 r = 0;
 action_seq = [1, 2, 3];

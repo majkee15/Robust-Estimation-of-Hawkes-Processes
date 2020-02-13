@@ -1,8 +1,10 @@
 %Impact of number of actions on accuracy - Reviewer 1 remark
+addpath(fullfile(pwd,'generate_synthetic_data'))
+
 clc, clear;
 
-mc_iterations = 2;
-n_guesses = 20;
+mc_iterations = 5;
+n_guesses = 10;
 [par,params] = setparlimit(0);
 T = 100;
 n_acc = 200;
@@ -26,18 +28,18 @@ parameters_tested = zeros(length(sensitivity_sequence),length(params));
 % best_mle_param = zeros(1, length(params), mc_iterations);
 % worst_mle_param = zeros(1, length(params), mc_iterations);
 
-for sensitivity=1:length(sensitivity_sequence)
+parfor sensitivity=1:length(sensitivity_sequence)
+    [par,params] = setparlimit(sensitivity_sequence(sensitivity));
     result_mle = zeros(n_guesses, length(params), mc_iterations);
     result_em = zeros(n_guesses, length(params), mc_iterations);
     fval_mle = zeros(n_guesses, 1 , mc_iterations);
     fval_em = zeros(n_guesses, 1, mc_iterations);
-
-    [par,params] = setparlimit(sensitivity_sequence(sensitivity));
     parameters_tested(sensitivity,:) = params;
     [accounts, actions_field] = generate_portfolio(n_acc,T,par,r,action_seq);
-    ai = 1/10;
-    bi= 10;
-    parfor it=1:mc_iterations
+    ai = 1/20;
+    bi= 20;
+    for it=1:mc_iterations
+        disp(['Sensitivity: ', num2str(sensitivity_sequence(sensitivity)),' Iteration: ', num2str(it)])
         [accounts, actions_field] = generate_portfolio(n_acc,T,par,r,action_seq);
         randguess = (ai + (bi-ai)*rand(n_guesses,length(params))) .* params;
         for guess=1:n_guesses
@@ -87,4 +89,5 @@ for sensitivity=1:length(sensitivity_sequence)
 %     tot_mle(sensitivity) = norm(mean_mle-params)/norm(params);
 %     tot_em(sensitivity) = norm(mean_em-params)/norm(params);
 end
+save('2it_10_guesses.mat')
 

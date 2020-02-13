@@ -73,14 +73,24 @@ for account=1:n_acc
         if i>1
 %             Expectation
             P_uij = g ./ norm;
-            uijpart2 = (-par.kappa*(dt) + log((par.delta10 + par.delta11*repaymentshappened)./P_uij)) * P_uij';
+            % prob of triggering for the very early arrivals is 0,i.e., no
+            % contribution to LL
+            uijpart2v1 = -par.kappa*(dt) + log((par.delta10 + par.delta11*repaymentshappened)./P_uij);
             % Prevent the division by zero in log
-            uijpart2(uijpart2==Inf) = 0;
+            uijpart2v1(uijpart2v1 == Inf) = 0;
+            uijpart2 = uijpart2v1 * P_uij';
+            %uijpart2 = (-par.kappa*(dt) + log((par.delta10 + par.delta11*repaymentshappened)./P_uij)) * P_uij';
+           
             if ~(abs(P_uii+sum(P_uij)-1) < eps*100)
                 error('Probs dont sum to one');
             end
         end
         cumsum = cumsum + l0part2 + uijpart2;
+        if isnan(cumsum)
+            diplay('NaN')
+            
+        end
+            
     end
     loglike(account) = l0part1 + apart1 + uijpart1 + cumsum;
 end

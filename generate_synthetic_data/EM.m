@@ -25,7 +25,14 @@ while c> 10e-4
         [opt,fval,exitflag,output] = fmincon(objfun,theta_0(k,:),A,b,Aeq,beq,lb,ub,nonlcon,options);
         timings(k) = toc;
     catch
-        fprintf('iteration %i \n',k)
+        fprintf('Problem during iteration: %i \n',k)
+        timings(k) = NaN;
+        fval =NaN;
+        opt = NaN;
+        k = k+1;
+        lls(k) = fval;
+        theta_0(k,:) = opt;
+        break;
     end
         
     
